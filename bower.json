@@ -1,0 +1,31 @@
+{
+  "name": "igrid",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Moicen/igrid",
+  "authors": [
+    "Moicen <moicen1988@gmail.com>"
+  ],
+  "description": "A lightweight jQuery plugin for data show and manipulation in list form.",
+  "main": [
+    "igrid.1.0.0.js",
+    "igrid.1.0.0.css"
+  ],
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "keywords": [
+    "grid"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}

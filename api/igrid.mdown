@@ -1,0 +1,238 @@
+Igrid API
+=========
+Igrid is a lightweight jQuery plugin for data manipulations. 
+It decorates a `<table>` element to show mutlple rows of data, support click to sort, paging, show subGrid.
+Developers can also use the advance options to give more custom and powerful manipulations for user.
+
+[TOC]
+
+## Usage ##
+
+* Common usage 
+	```javascript
+	//define init options
+	var options = {
+            cols: [
+                { field: "Id", label: "Id", hide: true },
+                { field: "Code", label: "Code", width: 120, sortable: true, format: "link", formatter: function (val, row) { return "Detail?id=" + row.Id; } },
+                { field: "InType", label: "InType", width: 80, format: "select", formatter: { "1": "Produce", "2": "Purchase", "3": "Return"} },
+                { field: "Status", label: "Status", width: 80, format: "checkbox" },
+                { field: "Quantity", label: "Quantity", align: "right", edit: { enable: true, type: "integer" }, width: 100 }
+                { field: "CreateTime", label: "CreateTime", format: "date", formatter: "yyyy-MM-dd HH:mm:ss" sortable: true, width: 100 },
+                { field: "Action", label: "Action", nondata: true, width: 100 }
+            ],
+            request: {
+                url: "Query",
+                sidx: "CreateTime",
+                sord: -1,
+                loadonce: false
+            }
+    	};
+    //init the igrid.
+	var igrid = $("#list").igrid(options);
+	```
+
+* Add an action column after data loaded 
+	```javascript
+	handler: {
+        onLoadComplete: function (data, start, end) {
+            var edit, del;
+            for (var i = start - 1; i <= end - 1; i++) {
+                var row = data[i];
+                edit = "<a class='btn btn-theme btn-sm' title='edit' data-toggle='tooltip' data-placement='top'" 
+                	 + " href='Update?id=" + row.Id + "'><i class='fa fa-pencil'></i></a>";
+              	del = "<a class='btn btn-theme btn-sm' title='delete' data-toggle='tooltip' data-placement='top' "
+                    + " onclick='Delete(" + row.Id + ")' ><i class='fa fa-trash-o'></i></a>";
+                igrid.setCell(i + 1, "Action", edit + del);
+            }
+        }
+    }
+	```
+* Use `customCol` property to init a custom column 
+	```javascript
+	customCol: {
+        label: "Action",
+        width: 50,
+        content: function (ridx, rowData) {
+            var del = $("<button class='btn btn-theme btn-sm' type='button' title='delete'><i class='fa fa-trash-o'></i></button>").tooltip().click(function (e) {
+	                e.stopPropagation();
+	                grid.delRowData(ridx);
+                });
+            return [del];
+        }
+    }
+	```
+* Verify inputs before row save 
+	```javascript
+	handler: {
+       beforeCellSave: function (value, field, ridx) {
+            if (!value && value !== 0) {
+                VOG.Alert("The input is required！", "warning");
+                return false;
+            }
+            if (value < 0) {
+                VOG.Alert("Quantity must be greater then 0！", "warning");
+                return false;
+            }
+            return value;
+        }
+    }
+	```
+* Use SubGrid to show detail information of each row 
+	```javascript
+	subGrid: {
+        enable: true,
+        options: {
+            cols: [
+                { field: "ColorCode", label: "ColorCode", width: 80 },
+                { field: "ColorName", label: "ColorName", width: 100 },
+                { field: "SizeNumber", label: "SizeNumber", width: 80 },
+                { field: "SizeName", label: "SizeName", width: 100 },
+                { field: "BarCode", label: "BarCode", width: 150 },
+                { field: "Quantity", label: "Quantity", align: "right", width: 100 }
+            ],
+            paginator: { paging: false },
+            request: {
+                url: "GetItems",
+                sidx: "StyleNo",
+                sord: -1
+            },
+            paramFn: function(row) {
+            	// Generate subgrid's request param by each row data of parent grid.
+                return { orderId: row.Id };
+            }
+        }
+    }
+	```
+
+
+## Options ##
+
+###### Global Options ######
+
+| Property Name | Data Type | Default Value | Description |
+|---------------|-----------|---------------|-------------|
+|    `cols`     |  `Array`  |      N/A      | The columns that will be contained by the grid. Full Column Options Shown [Here](#column). |
+|  `customCol`  | `Object`  |    `null`     | A custom column for custom actions like edit or delete row data. Full Options Shown [Here](#customCol). |
+| `singleSelect` | `Boolean` |   `false`    | If show a radio column for single select at the first of grid or not. Selection only works on current page. Cannot work with multiSelect. |
+| `multiSelect` | `Boolean` |    `false`    | If show a checkbox column for multiple select at the first of grid or not. Selection only works on current page. Cannot work with singleSelect. |
+| `showRowNum`  | `Boolean` |    `false`    | If show a row number column at the first of grid or not. |
+|   `remote`    | `Boolean` |    `true`     | If the data will be loaded from remote source or not. If true, work with the `request` property and the data property can be omitted. If false, the `data` property should have values. |
+|   `data`      |  `Array`  |    `null`     | The data will be show in grid if you use local mode(Which means the `remote` property is `false`). |
+
+###### Column Options ######
+`cols` property defines the columns that will be shown on the grid.
+
+| Property Name | Data Type | Default Value | Description |
+|---------------|-----------|---------------|-------------|
+|    `field`    |  `String` |      N/A      | The field name of the column. |
+|    `label`    |  `String` |      N/A      | The caption of the column. (Mainly for non-English users to show theire local name for better user experience) |
+|    `hide`     | `Boolean` |    `false`    | When set to true, the column will be hide. |
+|   `sortable`  | `Boolean` |    `false`    | Set to true to make the column be sortable, which means user can click the caption to reorder the data. |
+|  `sortfield`  |  `String` |   undefined   | Defines the sort field of the request(the `sidx` property) when user clicks this column to reorder. Ommitted to use the `field` property of this column. |
+|    `align`    |  `String` |    `center`   | Defines the alignment of the column. |
+|    `width`    |  `Number` |      N/A      | The width(px) of the column. Ommitted to make it be auto calculated. |
+|   `format`    |  `String` |      N/A      | The format type of the column. Currently can be ["select", "checkbox", "date", "link", "img", "custom"]. Work with `formatter` property for more customful set. |
+|  `formatter`  | `String,Object,Function` | N/A | To help format values, depend on the `format` property, usually should be an `Object`(for "select" format), a `String`(for simple "link" format) or mostly a `Function`(for any other format types). Also can be used without `format` property. |
+|   `nondata`   | `Boolean` |    `false`    | Set to true means this column will not show any data, mostly used to set some buttons or links for user to operate the grid data. **Usually will be the last column** |
+|     `edit`    |  `Object` |      N/A      | Defines the edit options for editable columns. Properties: `enable`: `Boolean`, set to true to enable edit. <br /> `type`: `String`, define the type of input value, such as `interger`, `decimal` etc. `min`: `integer`, set the minium value allowed. `max`: `integer`, set the maxium value allowed. |
+
+###### Custom Column Options ######
+`customCol` property allow you to add a custom column to do some custom actions, it'll alway be the last column.
+
+| Property Name | Data Type | Default Value | Description |
+|---------------|-----------|---------------|-------------|
+|    `label`    |  `String` |      N/A      | The caption will of the column. (Mainly for non-English users to show theire local name for better user experience) |
+|    `width`    |  `Number` |      N/A      | The width(px) of the column. Ommitted to make it be auto calculated. |
+|   `content`   | `Function, Array, Object, String` | N/A | Defines the content will be set to the custom column. Can be `Object` , `Array`, `String` or a `Function` can return one of before. **If it's object or an array of objects or an function which return an object, that object will be treated as `jQuery Plain Object`. |
+
+###### Request Options ######
+The `request` property descripes how the grid get data from remote source.
+
+| Property Name | Data Type | Default Value | Description |
+|---------------|-----------|---------------|-------------|
+|  `loadonce`   | `Boolean` |    `true`     | If set to `true`, means that grid will load all data from remote once and page it local. Else means the paging will be done in remote and grid load data only fill in current page once, which means every paging action will send a request to remote to get data for next page. |
+|   `cache`     | `Boolean` |    `false`    | If set to `true`, the `loadonce` must be `true`, igrid will request only once to the server and then store all data in local, for later searching, igrid will use the caches data. That'll reduce a lot of request and imporve the response speed a lot. |
+|   `param`     | `Object`  |    `null`     | The param will be send to remote server to get data |
+|    `sord`     | `Number`  |     `1`       | The order direction of data list. (`1` for `ASC`, `-1` for `DESC`) |
+|    `sidx`     | `String`  |  `undefined`  | The order field fo the data list, usualy should be one of the cols. (If the data is always orderd by server, then the field can be one that not in grid cols.) |
+|    `url`      | `String`  |  `undefined`  | The remote server url for request of grid to get data. Can be Ommitted with local mode. |
+|   `mtype`     | `String`  |    `POST`     | The type of remote request. Currently can be `POST` or `GET`. |
+
+###### Paginator Options ######
+The `paginator` property descripes how the grid page the data.
+
+| Property Name | Data Type | Default Value | Description |
+|---------------|-----------|---------------|-------------|
+|    `paging`   | `Boolean` |    `true`     | If the grid page the data. |
+| `pageSizeList` | `Array`  | `[10, 20, 50]` | The size of page(how many rows shown in one page) can be set by user. Usualy you can show a select of these options for users. User's selection will change the `pageSize` property of grid and probably send request to get new page data(with remote paging mode). |
+|   `pageSize`  | `Number`  |     `10`      | The current size of page the grid be setted. Will be send to remote when paging is done by server. |
+|  `pageIndex`  | `Number`  |     `1`       | The current page index of grid. Will be send to remote when paging is done by server. |
+|   `records`   | `Number`  |     `0`       | The total number of rows of data that get by current request or stored by the `data` property(with local mode). |
+|  `pageCount`  | `Number`  |     `0`       | The total number of pages. |
+
+###### Handler Options ######
+The `handler` property descripes how the handle function of each grid event.
+
+|   Event Name     |  Description | Parameters |
+|------------------|--------------|------------|
+|   `onCellClick`  | Triggered when user clicked on the grid row. | `ridx`: `Number`, the row number of the current clicked row. <br /> `selected`: `Boolean`, if the current click select the row or cancel the select. |
+| `onCellDblClick` | Triggered when user double clicked on the grid row. | `ridx`: `Number`, the row number of the current clicked row. |
+| `onLoadComplete` | Triggered when a request is done, you can do some custom action for the grid here. | `data`: `Array`, the loaded data. <br /> `start`: `Number`, the row number of the first row in current page(1 for the first). <br /> `end`: `Number`, the row number of the last row in current page. |
+| `beforeCellSave` | Triggered when users want to save their edit, usualy used to do validations or some calculations. | `value`: `string/number`, user inputs. <br /> `field`: `string`, the field user edited. <br /> `ridx`: `Number`, the row number of the current edited row. |
+| `afterCellSave`  | Triggered after the grid saved users' input. | `value`: `string/number`, user inputs. <br /> `field`: `string`, the field user edited. <br /> `ridx`: `Number`, the row number of the current edited row. |
+
+###### SubGrid Options ######
+Use `subGrid` property to define subgrids to show more infomation. With `subGrid`, the parent grid will have an additional column for user to click to expend the subGrid.
+
+| Property Name | Data Type | Default Value | Description |
+|---------------|-----------|---------------|-------------|
+|   `enable`    | `Boolean` |    `false`    | Define if enable the subgrid. |
+|   `options`   | `Object`  |    `null`     | Define the subgrid init options. Mostly same as usual grid options. With an additional property `paramFn` to define how to generate the request param of subgrid, can be an `Object` or an `Function` which return an `Object`.  |
+
+###### Parameters and return value of function properties ######
+| Property Name  |                Description               | Parameters | Return Value |
+|----------------|------------------------------------------|------------|--------------|
+|  `formatter`   | From `cols` property, for "link" format. | `value`: `Object`, the data of the current row and column. <br /> `row`: `Object`, the data of current row. <br /> `ridx`: `Number`, the number of current row. |
+|  `formatter`   | From `cols` property, for "img" format.  | `value`: `Object`, the data of the current row and column. <br /> `row`: `Object`, the data of current row. |
+|  `formatter`   | From `cols` property, for any other format. | `value`: `Object`, the data of the current row and column. <br /> `row`: `Object`, the data of current row. <br /> `ridx`: `Number`, the number of current row. |
+|   `paramFn`    | From `options` of `subGrid` property, custom generate the subgrid's request param. | `row`: `Object`, the data of current row. <br /> `ridx`: `Number`, the number of current row. |
+
+###### Methods ######
+Igrid have many useful methods for developers to do with data. 
+
+|   Method Name    |  Description | Parameters | Return Value |
+|------------------|--------------|------------|--------------|
+|    `getOption`   | Get the option of the grid | `key`: `String`, the property name of option, ommit to get all options. | The option of the igrid. `Object` |
+|     `getData`    | Get the data of the grid. | N/A | The data stored by the grid. `Array` |
+| `getCurPageData` | Get the data of current page of the grid. | N/A | The data of the current page view. `Array` |
+|       `load`     | Load data to the grid. | `data`: `Array`, the data will be set to igrid. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|      `reload`    | Reload data to the grid | `obj`: `Object, Array`, if `obj` is an object, it'll be treated as request param, else if it's an array, it'll be set to grid's data property immediately. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|      `search`    | Search data in the grid, if `request.cache` is `true`, igrid will search in local caches, otherwise will send a request with the given param to server. | `param`: `Object`, param used to search.| The Igrid Object of current grid, for chained action. `Igrid Object` |
+|      `update`    | Update data contained by igrid, if `request.cache` is `true`, igrid will update all cached data first, then the current searched data. Will trigger the `onUpdate` event.| `factor`: `function`, predicate to filter data that'll be update. `values`: `object`, the new data.| The Igrid Object of current grid, for chained action. `Igrid Object` |
+|       `clear`    | Clear all the data of the grid | N/A | The Igrid Object of current grid. `Igrid Object` |
+|     `refresh`    | Refresh the current page data view. Will trigger the `onLoadComplete` event. | N/A | The Igrid Object of current grid. `Igrid Object` |
+|     `showCol`    | Show one or multiple hidden columns. | `col`: `String, Array`, the name or array of names of columns that will be shown. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|     `hideCol`    | Hide one or multiple shown columns. | `col`: `String, Array`, the name or array of names of columns that will be hided. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|   `addRowData`   | Add a new row to the grid | `ridx`: `Number`, row number that the new row will be inserted, append to the tail when ommitted. <br /> `row`: `Object`, the data that will be set to the new row. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `addMultiRowDatas` | Add multiple rows to the grid | `ridx`: `Number`, row number that the new rows will be inserted, append to the tail when ommitted. <br /> `rows`: `Array`, the data that will be set to the new rows. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|   `setRowData`   | Set data to the specified row | `ridx`: `Number`, row number of the row that data will be set to. <br /> `data`: `Object`, the data that will be set to the specified row. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|   `getRowData`   | Get data of the specified row | `ridx`: `Number`, row number of the row that data be read from. | The data get from the specified row. `Object` |
+|   `delRowData`   | Delete the specified row | `ridx`: `Number`, row number of the row will be deleted. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `delMultiRowDatas` | Delete the specified rows | `ridxes`: `Array`, array contains row number of the rows will be deleted. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `getSelectedRowIdx` | Get row number of the current selected row(single select mode). | N/A | The row number (1 for first) of the selected row. `Number` |
+| `getSelectedRow` | Get data of the current selected row(single select mode). | N/A | The data get from the selected row. `Object` |
+| `setSelectedRowData` | Set data to the selected row(single select mode). | `data`: `Object`, the data that will be set to the selected row. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `delSelctedRow`  | Delete the selected row(s) | N/A | The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `getMultiSelectedRowIdxes` | Get row number of the current selected rows(multiple select mode). | N/A | The row number (1 for first) of the selected rows. `Array` |
+| `getMultiSelectedRows` | Get data of the current selected rows(multiple select mode). | N/A | The data get from the selected rows. `Array` |
+| `setRowSelected` | Set the Specified row selected. | `ridx`: `Number`, row number of the row will be selected.| The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `setRowUnselected` | Deselect the Specified row. | `ridx`: `Number`, row number of the row will be deselected.| The Igrid Object of current grid, for chained action. `Igrid Object` |
+|     `setCell`    | Set data to the specified cell. |  `ridx`: `Number`, row number of the specified cell. <br /> `field`: `String`, the column name of the specified cell. `data`: `Object`, the data that will be set to the specified cell. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|     `getCell`    | Get data of the specified cell. | `ridx`: `Number`, row number of the specified cell. <br /> `field`: `String`, the column name of the specified cell. | The data get from the specified cell. `Object` |
+|    `saveCell`    | Save the specified cell. | `ridx`: `Number`, row number of the specified cell. <br /> `field`: `String`, the column name of the specified cell. | The Igrid Object of current grid, for chained action. `Igrid Object` (If save fails, such as valification fails, will return `false`) |
+|    `editCell`    | Edit the specified cell. Make the sepe | `ridx`: `Number`, row number of the cell that will be edit. <br /> `field`: `String`, the column name of the specified cell. | The Igrid Object of current grid, for chained action. `Igrid Object` |
+| `resetSelection` | Reset the selection of the grid(usualy cancel all selections). | N/A | The Igrid Object of current grid, for chained action. `Igrid Object` |
+|     `destroy`    | Destroy igrid(will set the `table` element to the original state). | N/A | N/A |
+|   `storeStatus`  | Store the current status of the grid(include `pageSize`, `pageIndex`, current selected row number and the request param), data stored by the `sessionStorage`, can be used to restore the status of grid when go back from another page. | N/A | N/A |
+|      `valid`     | Check if the grid is valid, any input error of editable cell will makes it fail. | N/A | If the grid is valid. `Boolean` |
