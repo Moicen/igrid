@@ -49,6 +49,7 @@ Developers can also use the advance options to give more custom and powerful man
     }
 	```
 * Use `customCol` property to init a custom column 
+
 	```javascript
 	customCol: {
         label: "Action",

@@ -1,0 +1,1660 @@
+g<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  width: 45em;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 30px;
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAYcAA0AAAAACjQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAABwAAAAca8vGTk9TLzIAAAFMAAAARAAAAFZG1VHVY21hcAAAAZAAAAA+AAABQgAP9AdjdnQgAAAB0AAAAAQAAAAEACICiGdhc3AAAAHUAAAACAAAAAj//wADZ2x5ZgAAAdwAAADRAAABEKyikaNoZWFkAAACsAAAAC0AAAA2AtXoA2hoZWEAAALgAAAAHAAAACQHngNFaG10eAAAAvwAAAAQAAAAEAwAACJsb2NhAAADDAAAAAoAAAAKALIAVG1heHAAAAMYAAAAHwAAACABEAB2bmFtZQAAAzgAAALBAAAFu3I9x/Nwb3N0AAAF/AAAAB0AAAAvaoFvbwAAAAEAAAAAzBdyYwAAAADP2IQvAAAAAM/bz7t4nGNgZGFgnMDAysDB1Ml0hoGBoR9CM75mMGLkYGBgYmBlZsAKAtJcUxgcPsR8iGF2+O/AEMPsznAYKMwIkgMA5REMOXicY2BgYGaAYBkGRgYQsAHyGMF8FgYFIM0ChED+h5j//yEk/3KoSgZGNgYYk4GRCUgwMaACRoZhDwCs7QgGAAAAIgKIAAAAAf//AAJ4nHWMMQrCQBBF/0zWrCCIKUQsTDCL2EXMohYGSSmorScInsRGL2DOYJe0Ntp7BK+gJ1BxF1stZvjz/v8DRghQzEc4kIgKwiAppcA9LtzKLSkdNhKFY3HF4lK69ExKslx7Xa+vPRVS43G98vG1DnkDMIBUgFN0MDXflU8tbaZOUkXUH0+U27RoRpOIyCKjbMCVejwypzJJG4jIwb43rfl6wbwanocrJm9XFYfskuVC5K/TPyczNU7b84CXcbxks1Un6H6tLH9vf2LRnn8Ax7A5WQAAAHicY2BkYGAA4teL1+yI57f5ysDNwgAC529f0kOmWRiYVgEpDgYmEA8AUzEKsQAAAHicY2BkYGB2+O/AEMPCAAJAkpEBFbAAADgKAe0EAAAiAAAAAAQAAAAEAAAAAAAAKgAqACoAiAAAeJxjYGRgYGBhsGFgYgABEMkFhAwM/xn0QAIAD6YBhwB4nI1Ty07cMBS9QwKlQapQW3VXySvEqDCZGbGaHULiIQ1FKgjWMxknMfLEke2A+IJu+wntrt/QbVf9gG75jK577Lg8K1qQPCfnnnt8fX1NRC/pmjrk/zprC+8D7tBy9DHgBXoWfQ44Av8t4Bj4Z8CLtBL9CniJluPXASf0Lm4CXqFX8Q84dOLnMB17N4c7tBo1AS/Qi+hTwBH4rwHHwN8DXqQ30XXAS7QaLwSc0Gn8NuAVWou/gFmnjLrEaEh9GmDdDGgL3B4JsrRPDU2hTOiMSuJUIdKQQayiAth69r6akSSFqIJuA19TrzCIaY8sIoxyrNIrL//pw7A2iMygkX5vDj+G+kuoLdX4GlGK/8Lnlz6/h9MpmoO9rafrz7ILXEHHaAx95s9lsI7AHNMBWEZHULnfAXwG9/ZqdzLI08iuwRloXE8kfhXYAvE23+23DU3t626rbs8/8adv+9DWknsHp3E17oCf+Z48rvEQNZ78paYM38qfk3v/u3l3u3GXN2Dmvmvpf1Srwk3pB/VSsp512bA/GG5i2WJ7wu430yQ5K3nFGiOqgtmSB5pJVSizwaacmUZzZhXLlZTq8qGGFY2YcSkqbth6aW1tRmlaCFs2016m5qn36SbJrqosG4uMV4aP2PHBmB3tjtmgN2izkGQyLWprekbIntJFing32a5rKWCN/SdSoga45EJykyQ7asZvHQ8PTm6cslIpwyeyjbVltNikc2HTR7YKh9LBl9DADC0U/jLcBZDKrMhUBfQBvXRzLtFtjU9eNHKin0x5InTqb8lNpfKv1s1xHzTXRqgKzek/mb7nB8RZTCDhGEX3kK/8Q75AmUM/eLkfA+0Hi908Kx4eNsMgudg5GLdRD7a84npi+YxNr5i5KIbW5izXas7cHXIMAau1OueZhfj+cOcP3P8MNIWLyYOBuxL6DRylJ4cAAAB4nGNgYoAALjDJyIAOWMCiTIxMLDmZedkABtIBygAAAA==) format('woff');
+}
+
+.markdown-body {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code {
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body .octicon {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.markdown-body .octicon-link:before {
+  content: '\f05c';
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .anchor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+.markdown-body .highlight {
+  background: #fff;
+}
+
+.markdown-body .highlight .h {
+  color: #333;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.markdown-body .highlight .mf,
+.markdown-body .highlight .mh,
+.markdown-body .highlight .mi,
+.markdown-body .highlight .mo,
+.markdown-body .highlight .il,
+.markdown-body .highlight .m {
+  color: #945277;
+}
+
+.markdown-body .highlight .s,
+.markdown-body .highlight .sb,
+.markdown-body .highlight .sc,
+.markdown-body .highlight .sd,
+.markdown-body .highlight .s2,
+.markdown-body .highlight .se,
+.markdown-body .highlight .sh,
+.markdown-body .highlight .si,
+.markdown-body .highlight .sx,
+.markdown-body .highlight .s1 {
+  color: #df5000;
+}
+
+.markdown-body .highlight .kc,
+.markdown-body .highlight .kd,
+.markdown-body .highlight .kn,
+.markdown-body .highlight .kp,
+.markdown-body .highlight .kr,
+.markdown-body .highlight .kt,
+.markdown-body .highlight .k,
+.markdown-body .highlight .o {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .kt {
+  color: #458;
+}
+
+.markdown-body .highlight .c,
+.markdown-body .highlight .cm,
+.markdown-body .highlight .c1 {
+  color: #998;
+  font-style: italic;
+}
+
+.markdown-body .highlight .cp,
+.markdown-body .highlight .cs,
+.markdown-body .highlight .cp .h {
+  color: #999;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .cs {
+  font-style: italic;
+}
+
+.markdown-body .highlight .n {
+  color: #333;
+}
+
+.markdown-body .highlight .na,
+.markdown-body .highlight .nv,
+.markdown-body .highlight .vc,
+.markdown-body .highlight .vg,
+.markdown-body .highlight .vi {
+  color: #008080;
+}
+
+.markdown-body .highlight .nb {
+  color: #0086B3;
+}
+
+.markdown-body .highlight .nc {
+  color: #458;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .no {
+  color: #094e99;
+}
+
+.markdown-body .highlight .ni {
+  color: #800080;
+}
+
+.markdown-body .highlight .ne {
+  color: #990000;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .nf {
+  color: #945277;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .nn {
+  color: #555;
+}
+
+.markdown-body .highlight .nt {
+  color: #000080;
+}
+
+.markdown-body .highlight .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+}
+
+.markdown-body .highlight .gd {
+  color: #000;
+  background-color: #fdd;
+}
+
+.markdown-body .highlight .gd .x {
+  color: #000;
+  background-color: #faa;
+}
+
+.markdown-body .highlight .ge {
+  font-style: italic;
+}
+
+.markdown-body .highlight .gr {
+  color: #aa0000;
+}
+
+.markdown-body .highlight .gh {
+  color: #999;
+}
+
+.markdown-body .highlight .gi {
+  color: #000;
+  background-color: #dfd;
+}
+
+.markdown-body .highlight .gi .x {
+  color: #000;
+  background-color: #afa;
+}
+
+.markdown-body .highlight .go {
+  color: #888;
+}
+
+.markdown-body .highlight .gp {
+  color: #555;
+}
+
+.markdown-body .highlight .gs {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .gu {
+  color: #800080;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .gt {
+  color: #aa0000;
+}
+
+.markdown-body .highlight .ow {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .w {
+  color: #bbb;
+}
+
+.markdown-body .highlight .sr {
+  color: #017936;
+}
+
+.markdown-body .highlight .ss {
+  color: #8b467f;
+}
+
+.markdown-body .highlight .bp {
+  color: #999;
+}
+
+.markdown-body .highlight .gc {
+  color: #999;
+  background-color: #EAF2F5;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #000;
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+}
+
+.markdown-body .highlight .pl-coc,
+.markdown-body .highlight .pl-entm,
+.markdown-body .highlight .pl-eoa,
+.markdown-body .highlight .pl-mai .pl-sf,
+.markdown-body .highlight .pl-pdv,
+.markdown-body .highlight .pl-sc,
+.markdown-body .highlight .pl-sr,
+.markdown-body .highlight .pl-v,
+.markdown-body .highlight .pl-vpf {
+  color: #0086b3;
+}
+
+.markdown-body .highlight .pl-eoac,
+.markdown-body .highlight .pl-mdht,
+.markdown-body .highlight .pl-mi1,
+.markdown-body .highlight .pl-mri,
+.markdown-body .highlight .pl-va,
+.markdown-body .highlight .pl-vpu {
+  color: #008080;
+}
+
+.markdown-body .highlight .pl-c,
+.markdown-body .highlight .pl-pdc {
+  color: #b4b7b4;
+  font-style: italic;
+}
+
+.markdown-body .highlight .pl-k,
+.markdown-body .highlight .pl-ko,
+.markdown-body .highlight .pl-kolp,
+.markdown-body .highlight .pl-mc,
+.markdown-body .highlight .pl-mr,
+.markdown-body .highlight .pl-ms,
+.markdown-body .highlight .pl-s,
+.markdown-body .highlight .pl-sok,
+.markdown-body .highlight .pl-st {
+  color: #6e5494;
+}
+
+.markdown-body .highlight .pl-ef,
+.markdown-body .highlight .pl-enf,
+.markdown-body .highlight .pl-enm,
+.markdown-body .highlight .pl-entc,
+.markdown-body .highlight .pl-eoi,
+.markdown-body .highlight .pl-sf,
+.markdown-body .highlight .pl-smc {
+  color: #d12089;
+}
+
+.markdown-body .highlight .pl-ens,
+.markdown-body .highlight .pl-eoai,
+.markdown-body .highlight .pl-kos,
+.markdown-body .highlight .pl-mh .pl-pdh,
+.markdown-body .highlight .pl-mp,
+.markdown-body .highlight .pl-pde,
+.markdown-body .highlight .pl-stp {
+  color: #458;
+}
+
+.markdown-body .highlight .pl-enti {
+  color: #d12089;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .pl-cce,
+.markdown-body .highlight .pl-enc,
+.markdown-body .highlight .pl-kou,
+.markdown-body .highlight .pl-mq {
+  color: #f93;
+}
+
+.markdown-body .highlight .pl-mp1 .pl-sf {
+  color: #458;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .pl-cos,
+.markdown-body .highlight .pl-ent,
+.markdown-body .highlight .pl-md,
+.markdown-body .highlight .pl-mdhf,
+.markdown-body .highlight .pl-ml,
+.markdown-body .highlight .pl-pdc1,
+.markdown-body .highlight .pl-pds,
+.markdown-body .highlight .pl-s1,
+.markdown-body .highlight .pl-scp,
+.markdown-body .highlight .pl-sol {
+  color: #df5000;
+}
+
+.markdown-body .highlight .pl-c1,
+.markdown-body .highlight .pl-cn,
+.markdown-body .highlight .pl-pse,
+.markdown-body .highlight .pl-pse .pl-s2,
+.markdown-body .highlight .pl-vi {
+  color: #a31515;
+}
+
+.markdown-body .highlight .pl-mb,
+.markdown-body .highlight .pl-pdb {
+  color: #df5000;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .pl-mi,
+.markdown-body .highlight .pl-pdi {
+  color: #6e5494;
+  font-style: italic;
+}
+
+.markdown-body .highlight .pl-ms1 {
+  background-color: #f5f5f5;
+}
+
+.markdown-body .highlight .pl-mdh,
+.markdown-body .highlight .pl-mdi {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .pl-mdr {
+  color: #0086b3;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .pl-s2 {
+  color: #333;
+}
+
+.markdown-body .highlight .pl-ii {
+  background-color: #df5000;
+  color: #fff;
+}
+
+.markdown-body .highlight .pl-ib {
+  background-color: #f93;
+}
+
+.markdown-body .highlight .pl-id {
+  background-color: #a31515;
+  color: #fff;
+}
+
+.markdown-body .highlight .pl-iu {
+  background-color: #b4b7b4;
+}
+
+.markdown-body .highlight .pl-mo {
+  color: #969896;
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  float: left;
+  margin: 0.3em 0 0.25em -1.6em;
+  vertical-align: middle;
+}</style><title>igrid</title></head><body><article class="markdown-body"><h1>
+<a id="user-content-igrid-api" class="anchor" href="#igrid-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Igrid API</h1>
+
+<p>Igrid is a lightweight jQuery plugin for data manipulations. 
+It decorates a <code>&lt;table&gt;</code> element to show mutlple rows of data, support click to sort, paging, show subGrid.
+Developers can also use the advance options to give more custom and powerful manipulations for user.</p>
+
+<p>[TOC]</p>
+
+<h2>
+<a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<ul>
+<li>
+<p>Common usage </p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">//define init options</span>
+<span class="pl-k">var</span> options <span class="pl-k">=</span> {
+        cols<span class="pl-k">:</span> [
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Id<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Id<span class="pl-pds">"</span></span>, hide<span class="pl-k">:</span> <span class="pl-c1">true</span> },
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Code<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Code<span class="pl-pds">"</span></span>, width<span class="pl-k">:</span> <span class="pl-c1">120</span>, sortable<span class="pl-k">:</span> <span class="pl-c1">true</span>, format<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>link<span class="pl-pds">"</span></span>, <span class="pl-en">formatter</span>: <span class="pl-k">function</span> (<span class="pl-smi">val</span>, <span class="pl-smi">row</span>) { <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>Detail?id=<span class="pl-pds">"</span></span> <span class="pl-k">+</span> row.Id; } },
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>InType<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>InType<span class="pl-pds">"</span></span>, width<span class="pl-k">:</span> <span class="pl-c1">80</span>, format<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>select<span class="pl-pds">"</span></span>, formatter<span class="pl-k">:</span> { <span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Produce<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Purchase<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Return<span class="pl-pds">"</span></span>} },
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Status<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Status<span class="pl-pds">"</span></span>, width<span class="pl-k">:</span> <span class="pl-c1">80</span>, format<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>checkbox<span class="pl-pds">"</span></span> },
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Quantity<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Quantity<span class="pl-pds">"</span></span>, align<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>right<span class="pl-pds">"</span></span>, edit<span class="pl-k">:</span> { enable<span class="pl-k">:</span> <span class="pl-c1">true</span>, type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>integer<span class="pl-pds">"</span></span> }, width<span class="pl-k">:</span> <span class="pl-c1">100</span> }
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>CreateTime<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>CreateTime<span class="pl-pds">"</span></span>, format<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>date<span class="pl-pds">"</span></span>, formatter<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>yyyy-MM-dd HH:mm:ss<span class="pl-pds">"</span></span> sortable<span class="pl-k">:</span> <span class="pl-c1">true</span>, width<span class="pl-k">:</span> <span class="pl-c1">100</span> },
+            { field<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Action<span class="pl-pds">"</span></span>, label<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Action<span class="pl-pds">"</span></span>, nondata<span class="pl-k">:</span> <span class="pl-c1">true</span>, width<span class="pl-k">:</span> <span class="pl-c1">100</span> }
+        ],
+        request<span class="pl-k">:</span> {
+            url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Query<span class="pl-pds">"</span></span>,
+            sidx<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>CreateTime<span class="pl-pds">"</span></span>,
+            sord<span class="pl-k">:</span> <span class="pl-k">-</span><span class="pl-c1">1</span>,
+            loadonce<span class="pl-k">:</span> <span class="pl-c1">false</span>
+        }
+    };
+<span class="pl-c">//init the igrid.</span>
+<span class="pl-k">var</span> igrid <span class="pl-k">=</span> $(<span class="pl-s"><span class="pl-pds">"</span>#list<span class="pl-pds">"</span></span>).igrid(options);</pre></div>
+</li>
+<li>
+<p>Add an action column after data loaded </p>
+
+<div class="highlight highlight-javascript"><pre>handler<span class="pl-k">:</span> {
+    <span class="pl-en">onLoadComplete</span>: <span class="pl-k">function</span> (<span class="pl-smi">data</span>, <span class="pl-smi">start</span>, <span class="pl-smi">end</span>) {
+        <span class="pl-k">var</span> edit, del;
+        <span class="pl-k">for</span> (<span class="pl-k">var</span> i <span class="pl-k">=</span> start <span class="pl-k">-</span> <span class="pl-c1">1</span>; i <span class="pl-k">&lt;=</span> end <span class="pl-k">-</span> <span class="pl-c1">1</span>; i<span class="pl-k">++</span>) {
+            <span class="pl-k">var</span> row <span class="pl-k">=</span> data[i];
+            edit <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;a class='btn btn-theme btn-sm' title='edit' data-toggle='tooltip' data-placement='top'<span class="pl-pds">"</span></span> 
+                 <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> href='Update?id=<span class="pl-pds">"</span></span> <span class="pl-k">+</span> row.Id <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span>'&gt;&lt;i class='fa fa-pencil'&gt;&lt;/i&gt;&lt;/a&gt;<span class="pl-pds">"</span></span>;
+            del <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;a class='btn btn-theme btn-sm' title='delete' data-toggle='tooltip' data-placement='top' <span class="pl-pds">"</span></span>
+                <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> onclick='Delete(<span class="pl-pds">"</span></span> <span class="pl-k">+</span> row.Id <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span>)' &gt;&lt;i class='fa fa-trash-o'&gt;&lt;/i&gt;&lt;/a&gt;<span class="pl-pds">"</span></span>;
+            igrid.setCell(i <span class="pl-k">+</span> <span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">"</span>Action<span class="pl-pds">"</span></span>, edit <span class="pl-k">+</span> del);
+        }
+    }
+}</pre></div>
+</li>
+<li>Use <code>customCol</code> property to init a custom column 
+<code>javascript
+customCol: {
+    label: "Action",
+    width: 50,
+    content: function (ridx, rowData) {
+        var del = $("&lt;button class='btn btn-theme btn-sm' type='button' title='delete'&gt;&lt;i class='fa fa-trash-o'&gt;&lt;/i&gt;&lt;/button&gt;").tooltip().click(function (e) {
+                e.stopPropagation();
+                grid.delRowData(ridx);
+            });
+        return [del];
+    }
+}
+</code>
+</li>
+<li>Verify inputs before row save 
+<code>javascript
+handler: {
+   beforeCellSave: function (value, field, ridx) {
+        if (!value &amp;&amp; value !== 0) {
+            VOG.Alert("The input is required！", "warning");
+            return false;
+        }
+        if (value &lt; 0) {
+            VOG.Alert("Quantity must be greater then 0！", "warning");
+            return false;
+        }
+        return value;
+    }
+}
+</code>
+</li>
+<li>Use SubGrid to show detail information of each row 
+<code>javascript
+subGrid: {
+    enable: true,
+    options: {
+        cols: [
+            { field: "ColorCode", label: "ColorCode", width: 80 },
+            { field: "ColorName", label: "ColorName", width: 100 },
+            { field: "SizeNumber", label: "SizeNumber", width: 80 },
+            { field: "SizeName", label: "SizeName", width: 100 },
+            { field: "BarCode", label: "BarCode", width: 150 },
+            { field: "Quantity", label: "Quantity", align: "right", width: 100 }
+        ],
+        paginator: { paging: false },
+        request: {
+            url: "GetItems",
+            sidx: "StyleNo",
+            sord: -1
+        },
+        paramFn: function(row) {
+            // Generate subgrid's request param by each row data of parent grid.
+            return { orderId: row.Id };
+        }
+    }
+}
+</code>
+</li>
+</ul>
+
+<h2>
+<a id="user-content-options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h2>
+
+<h6>
+<a id="user-content-global-options" class="anchor" href="#global-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Global Options</h6>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Data Type</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cols</code></td>
+<td><code>Array</code></td>
+<td>N/A</td>
+<td>The columns that will be contained by the grid. Full Column Options Shown <a href="#column">Here</a>.</td>
+</tr>
+<tr>
+<td><code>customCol</code></td>
+<td><code>Object</code></td>
+<td><code>null</code></td>
+<td>A custom column for custom actions like edit or delete row data. Full Options Shown <a href="#customCol">Here</a>.</td>
+</tr>
+<tr>
+<td><code>singleSelect</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>If show a radio column for single select at the first of grid or not. Selection only works on current page. Cannot work with multiSelect.</td>
+</tr>
+<tr>
+<td><code>multiSelect</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>If show a checkbox column for multiple select at the first of grid or not. Selection only works on current page. Cannot work with singleSelect.</td>
+</tr>
+<tr>
+<td><code>showRowNum</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>If show a row number column at the first of grid or not.</td>
+</tr>
+<tr>
+<td><code>remote</code></td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>If the data will be loaded from remote source or not. If true, work with the <code>request</code> property and the data property can be omitted. If false, the <code>data</code> property should have values.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><code>Array</code></td>
+<td><code>null</code></td>
+<td>The data will be show in grid if you use local mode(Which means the <code>remote</code> property is <code>false</code>).</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-column-options" class="anchor" href="#column-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Column Options</h6>
+
+<p><code>cols</code> property defines the columns that will be shown on the grid.</p>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Data Type</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>field</code></td>
+<td><code>String</code></td>
+<td>N/A</td>
+<td>The field name of the column.</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>N/A</td>
+<td>The caption of the column. (Mainly for non-English users to show theire local name for better user experience)</td>
+</tr>
+<tr>
+<td><code>hide</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>When set to true, the column will be hide.</td>
+</tr>
+<tr>
+<td><code>sortable</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>Set to true to make the column be sortable, which means user can click the caption to reorder the data.</td>
+</tr>
+<tr>
+<td><code>sortfield</code></td>
+<td><code>String</code></td>
+<td>undefined</td>
+<td>Defines the sort field of the request(the <code>sidx</code> property) when user clicks this column to reorder. Ommitted to use the <code>field</code> property of this column.</td>
+</tr>
+<tr>
+<td><code>align</code></td>
+<td><code>String</code></td>
+<td><code>center</code></td>
+<td>Defines the alignment of the column.</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td><code>Number</code></td>
+<td>N/A</td>
+<td>The width(px) of the column. Ommitted to make it be auto calculated.</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td><code>String</code></td>
+<td>N/A</td>
+<td>The format type of the column. Currently can be ["select", "checkbox", "date", "link", "img", "custom"]. Work with <code>formatter</code> property for more customful set.</td>
+</tr>
+<tr>
+<td><code>formatter</code></td>
+<td><code>String,Object,Function</code></td>
+<td>N/A</td>
+<td>To help format values, depend on the <code>format</code> property, usually should be an <code>Object</code>(for "select" format), a <code>String</code>(for simple "link" format) or mostly a <code>Function</code>(for any other format types). Also can be used without <code>format</code> property.</td>
+</tr>
+<tr>
+<td><code>nondata</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>Set to true means this column will not show any data, mostly used to set some buttons or links for user to operate the grid data. <strong>Usually will be the last column</strong>
+</td>
+</tr>
+<tr>
+<td><code>edit</code></td>
+<td><code>Object</code></td>
+<td>N/A</td>
+<td>Defines the edit options for editable columns. Properties: <code>enable</code>: <code>Boolean</code>, set to true to enable edit. <br> <code>type</code>: <code>String</code>, define the type of input value, such as <code>interger</code>, <code>decimal</code> etc. <code>min</code>: <code>integer</code>, set the minium value allowed. <code>max</code>: <code>integer</code>, set the maxium value allowed.</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-custom-column-options" class="anchor" href="#custom-column-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Custom Column Options</h6>
+
+<p><code>customCol</code> property allow you to add a custom column to do some custom actions, it'll alway be the last column.</p>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Data Type</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>N/A</td>
+<td>The caption will of the column. (Mainly for non-English users to show theire local name for better user experience)</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td><code>Number</code></td>
+<td>N/A</td>
+<td>The width(px) of the column. Ommitted to make it be auto calculated.</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td><code>Function, Array, Object, String</code></td>
+<td>N/A</td>
+<td>Defines the content will be set to the custom column. Can be <code>Object</code> , <code>Array</code>, <code>String</code> or a <code>Function</code> can return one of before. **If it's object or an array of objects or an function which return an object, that object will be treated as <code>jQuery Plain Object</code>.</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-request-options" class="anchor" href="#request-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Request Options</h6>
+
+<p>The <code>request</code> property descripes how the grid get data from remote source.</p>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Data Type</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>loadonce</code></td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>If set to <code>true</code>, means that grid will load all data from remote once and page it local. Else means the paging will be done in remote and grid load data only fill in current page once, which means every paging action will send a request to remote to get data for next page.</td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>If set to <code>true</code>, the <code>loadonce</code> must be <code>true</code>, igrid will request only once to the server and then store all data in local, for later searching, igrid will use the caches data. That'll reduce a lot of request and imporve the response speed a lot.</td>
+</tr>
+<tr>
+<td><code>param</code></td>
+<td><code>Object</code></td>
+<td><code>null</code></td>
+<td>The param will be send to remote server to get data</td>
+</tr>
+<tr>
+<td><code>sord</code></td>
+<td><code>Number</code></td>
+<td><code>1</code></td>
+<td>The order direction of data list. (<code>1</code> for <code>ASC</code>, <code>-1</code> for <code>DESC</code>)</td>
+</tr>
+<tr>
+<td><code>sidx</code></td>
+<td><code>String</code></td>
+<td><code>undefined</code></td>
+<td>The order field fo the data list, usualy should be one of the cols. (If the data is always orderd by server, then the field can be one that not in grid cols.)</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>String</code></td>
+<td><code>undefined</code></td>
+<td>The remote server url for request of grid to get data. Can be Ommitted with local mode.</td>
+</tr>
+<tr>
+<td><code>mtype</code></td>
+<td><code>String</code></td>
+<td><code>POST</code></td>
+<td>The type of remote request. Currently can be <code>POST</code> or <code>GET</code>.</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-paginator-options" class="anchor" href="#paginator-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Paginator Options</h6>
+
+<p>The <code>paginator</code> property descripes how the grid page the data.</p>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Data Type</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>paging</code></td>
+<td><code>Boolean</code></td>
+<td><code>true</code></td>
+<td>If the grid page the data.</td>
+</tr>
+<tr>
+<td><code>pageSizeList</code></td>
+<td><code>Array</code></td>
+<td><code>[10, 20, 50]</code></td>
+<td>The size of page(how many rows shown in one page) can be set by user. Usualy you can show a select of these options for users. User's selection will change the <code>pageSize</code> property of grid and probably send request to get new page data(with remote paging mode).</td>
+</tr>
+<tr>
+<td><code>pageSize</code></td>
+<td><code>Number</code></td>
+<td><code>10</code></td>
+<td>The current size of page the grid be setted. Will be send to remote when paging is done by server.</td>
+</tr>
+<tr>
+<td><code>pageIndex</code></td>
+<td><code>Number</code></td>
+<td><code>1</code></td>
+<td>The current page index of grid. Will be send to remote when paging is done by server.</td>
+</tr>
+<tr>
+<td><code>records</code></td>
+<td><code>Number</code></td>
+<td><code>0</code></td>
+<td>The total number of rows of data that get by current request or stored by the <code>data</code> property(with local mode).</td>
+</tr>
+<tr>
+<td><code>pageCount</code></td>
+<td><code>Number</code></td>
+<td><code>0</code></td>
+<td>The total number of pages.</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-handler-options" class="anchor" href="#handler-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Handler Options</h6>
+
+<p>The <code>handler</code> property descripes how the handle function of each grid event.</p>
+
+<table>
+<thead>
+<tr>
+<th>Event Name</th>
+<th>Description</th>
+<th>Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onCellClick</code></td>
+<td>Triggered when user clicked on the grid row.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, the row number of the current clicked row. <br> <code>selected</code>: <code>Boolean</code>, if the current click select the row or cancel the select.</td>
+</tr>
+<tr>
+<td><code>onCellDblClick</code></td>
+<td>Triggered when user double clicked on the grid row.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, the row number of the current clicked row.</td>
+</tr>
+<tr>
+<td><code>onLoadComplete</code></td>
+<td>Triggered when a request is done, you can do some custom action for the grid here.</td>
+<td>
+<code>data</code>: <code>Array</code>, the loaded data. <br> <code>start</code>: <code>Number</code>, the row number of the first row in current page(1 for the first). <br> <code>end</code>: <code>Number</code>, the row number of the last row in current page.</td>
+</tr>
+<tr>
+<td><code>beforeCellSave</code></td>
+<td>Triggered when users want to save their edit, usualy used to do validations or some calculations.</td>
+<td>
+<code>value</code>: <code>string/number</code>, user inputs. <br> <code>field</code>: <code>string</code>, the field user edited. <br> <code>ridx</code>: <code>Number</code>, the row number of the current edited row.</td>
+</tr>
+<tr>
+<td><code>afterCellSave</code></td>
+<td>Triggered after the grid saved users' input.</td>
+<td>
+<code>value</code>: <code>string/number</code>, user inputs. <br> <code>field</code>: <code>string</code>, the field user edited. <br> <code>ridx</code>: <code>Number</code>, the row number of the current edited row.</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-subgrid-options" class="anchor" href="#subgrid-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>SubGrid Options</h6>
+
+<p>Use <code>subGrid</code> property to define subgrids to show more infomation. With <code>subGrid</code>, the parent grid will have an additional column for user to click to expend the subGrid.</p>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Data Type</th>
+<th>Default Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enable</code></td>
+<td><code>Boolean</code></td>
+<td><code>false</code></td>
+<td>Define if enable the subgrid.</td>
+</tr>
+<tr>
+<td><code>options</code></td>
+<td><code>Object</code></td>
+<td><code>null</code></td>
+<td>Define the subgrid init options. Mostly same as usual grid options. With an additional property <code>paramFn</code> to define how to generate the request param of subgrid, can be an <code>Object</code> or an <code>Function</code> which return an <code>Object</code>.</td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-parameters-and-return-value-of-function-properties" class="anchor" href="#parameters-and-return-value-of-function-properties" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parameters and return value of function properties</h6>
+
+<table>
+<thead>
+<tr>
+<th>Property Name</th>
+<th>Description</th>
+<th>Parameters</th>
+<th>Return Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>formatter</code></td>
+<td>From <code>cols</code> property, for "link" format.</td>
+<td>
+<code>value</code>: <code>Object</code>, the data of the current row and column. <br> <code>row</code>: <code>Object</code>, the data of current row. <br> <code>ridx</code>: <code>Number</code>, the number of current row.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>formatter</code></td>
+<td>From <code>cols</code> property, for "img" format.</td>
+<td>
+<code>value</code>: <code>Object</code>, the data of the current row and column. <br> <code>row</code>: <code>Object</code>, the data of current row.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>formatter</code></td>
+<td>From <code>cols</code> property, for any other format.</td>
+<td>
+<code>value</code>: <code>Object</code>, the data of the current row and column. <br> <code>row</code>: <code>Object</code>, the data of current row. <br> <code>ridx</code>: <code>Number</code>, the number of current row.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>paramFn</code></td>
+<td>From <code>options</code> of <code>subGrid</code> property, custom generate the subgrid's request param.</td>
+<td>
+<code>row</code>: <code>Object</code>, the data of current row. <br> <code>ridx</code>: <code>Number</code>, the number of current row.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h6>
+<a id="user-content-methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h6>
+
+<p>Igrid have many useful methods for developers to do with data. </p>
+
+<table>
+<thead>
+<tr>
+<th>Method Name</th>
+<th>Description</th>
+<th>Parameters</th>
+<th>Return Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getOption</code></td>
+<td>Get the option of the grid</td>
+<td>
+<code>key</code>: <code>String</code>, the property name of option, ommit to get all options.</td>
+<td>The option of the igrid. <code>Object</code>
+</td>
+</tr>
+<tr>
+<td><code>getData</code></td>
+<td>Get the data of the grid.</td>
+<td>N/A</td>
+<td>The data stored by the grid. <code>Array</code>
+</td>
+</tr>
+<tr>
+<td><code>getCurPageData</code></td>
+<td>Get the data of current page of the grid.</td>
+<td>N/A</td>
+<td>The data of the current page view. <code>Array</code>
+</td>
+</tr>
+<tr>
+<td><code>load</code></td>
+<td>Load data to the grid.</td>
+<td>
+<code>data</code>: <code>Array</code>, the data will be set to igrid.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>reload</code></td>
+<td>Reload data to the grid</td>
+<td>
+<code>obj</code>: <code>Object, Array</code>, if <code>obj</code> is an object, it'll be treated as request param, else if it's an array, it'll be set to grid's data property immediately.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>Search data in the grid, if <code>request.cache</code> is <code>true</code>, igrid will search in local caches, otherwise will send a request with the given param to server.</td>
+<td>
+<code>param</code>: <code>Object</code>, param used to search.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>update</code></td>
+<td>Update data contained by igrid, if <code>request.cache</code> is <code>true</code>, igrid will update all cached data first, then the current searched data. Will trigger the <code>onUpdate</code> event.</td>
+<td>
+<code>factor</code>: <code>function</code>, predicate to filter data that'll be update. <code>values</code>: <code>object</code>, the new data.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>Clear all the data of the grid</td>
+<td>N/A</td>
+<td>The Igrid Object of current grid. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>refresh</code></td>
+<td>Refresh the current page data view. Will trigger the <code>onLoadComplete</code> event.</td>
+<td>N/A</td>
+<td>The Igrid Object of current grid. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>showCol</code></td>
+<td>Show one or multiple hidden columns.</td>
+<td>
+<code>col</code>: <code>String, Array</code>, the name or array of names of columns that will be shown.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>hideCol</code></td>
+<td>Hide one or multiple shown columns.</td>
+<td>
+<code>col</code>: <code>String, Array</code>, the name or array of names of columns that will be hided.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>addRowData</code></td>
+<td>Add a new row to the grid</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number that the new row will be inserted, append to the tail when ommitted. <br> <code>row</code>: <code>Object</code>, the data that will be set to the new row.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>addMultiRowDatas</code></td>
+<td>Add multiple rows to the grid</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number that the new rows will be inserted, append to the tail when ommitted. <br> <code>rows</code>: <code>Array</code>, the data that will be set to the new rows.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>setRowData</code></td>
+<td>Set data to the specified row</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the row that data will be set to. <br> <code>data</code>: <code>Object</code>, the data that will be set to the specified row.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>getRowData</code></td>
+<td>Get data of the specified row</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the row that data be read from.</td>
+<td>The data get from the specified row. <code>Object</code>
+</td>
+</tr>
+<tr>
+<td><code>delRowData</code></td>
+<td>Delete the specified row</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the row will be deleted.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>delMultiRowDatas</code></td>
+<td>Delete the specified rows</td>
+<td>
+<code>ridxes</code>: <code>Array</code>, array contains row number of the rows will be deleted.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>getSelectedRowIdx</code></td>
+<td>Get row number of the current selected row(single select mode).</td>
+<td>N/A</td>
+<td>The row number (1 for first) of the selected row. <code>Number</code>
+</td>
+</tr>
+<tr>
+<td><code>getSelectedRow</code></td>
+<td>Get data of the current selected row(single select mode).</td>
+<td>N/A</td>
+<td>The data get from the selected row. <code>Object</code>
+</td>
+</tr>
+<tr>
+<td><code>setSelectedRowData</code></td>
+<td>Set data to the selected row(single select mode).</td>
+<td>
+<code>data</code>: <code>Object</code>, the data that will be set to the selected row.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>delSelctedRow</code></td>
+<td>Delete the selected row(s)</td>
+<td>N/A</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>getMultiSelectedRowIdxes</code></td>
+<td>Get row number of the current selected rows(multiple select mode).</td>
+<td>N/A</td>
+<td>The row number (1 for first) of the selected rows. <code>Array</code>
+</td>
+</tr>
+<tr>
+<td><code>getMultiSelectedRows</code></td>
+<td>Get data of the current selected rows(multiple select mode).</td>
+<td>N/A</td>
+<td>The data get from the selected rows. <code>Array</code>
+</td>
+</tr>
+<tr>
+<td><code>setRowSelected</code></td>
+<td>Set the Specified row selected.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the row will be selected.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>setRowUnselected</code></td>
+<td>Deselect the Specified row.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the row will be deselected.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>setCell</code></td>
+<td>Set data to the specified cell.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the specified cell. <br> <code>field</code>: <code>String</code>, the column name of the specified cell. <code>data</code>: <code>Object</code>, the data that will be set to the specified cell.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>getCell</code></td>
+<td>Get data of the specified cell.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the specified cell. <br> <code>field</code>: <code>String</code>, the column name of the specified cell.</td>
+<td>The data get from the specified cell. <code>Object</code>
+</td>
+</tr>
+<tr>
+<td><code>saveCell</code></td>
+<td>Save the specified cell.</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the specified cell. <br> <code>field</code>: <code>String</code>, the column name of the specified cell.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code> (If save fails, such as valification fails, will return <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>editCell</code></td>
+<td>Edit the specified cell. Make the sepe</td>
+<td>
+<code>ridx</code>: <code>Number</code>, row number of the cell that will be edit. <br> <code>field</code>: <code>String</code>, the column name of the specified cell.</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>resetSelection</code></td>
+<td>Reset the selection of the grid(usualy cancel all selections).</td>
+<td>N/A</td>
+<td>The Igrid Object of current grid, for chained action. <code>Igrid Object</code>
+</td>
+</tr>
+<tr>
+<td><code>destroy</code></td>
+<td>Destroy igrid(will set the <code>table</code> element to the original state).</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>storeStatus</code></td>
+<td>Store the current status of the grid(include <code>pageSize</code>, <code>pageIndex</code>, current selected row number and the request param), data stored by the <code>sessionStorage</code>, can be used to restore the status of grid when go back from another page.</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><code>valid</code></td>
+<td>Check if the grid is valid, any input error of editable cell will makes it fail.</td>
+<td>N/A</td>
+<td>If the grid is valid. <code>Boolean</code>
+</td>
+</tr>
+</tbody>
+</table>
+</article></body></html>

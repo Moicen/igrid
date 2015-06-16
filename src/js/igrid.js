@@ -1,3 +1,15 @@
+/*
+* Igrid is a lightweight jQuery plugin for data manipulations. 
+* This project is free for both opensource and commercial use,
+* and you can also change some code for your best usage.
+* While I totally hope you can commit your change to github
+* if you have a very good reason to change, thanks.
+
+* @author <a href="mailto:moicen1988@gmail.com">Moicen Lee</a>
+* @version 1.0.0
+*/
+
+
 (function($) {
     "use strict";
     $.fn.igrid = function(options) {
