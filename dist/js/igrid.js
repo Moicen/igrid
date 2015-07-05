@@ -9,7 +9,13 @@
 * @version 1.0.0
 */
 
-(function($) {
+;(function (factory) {
+    if (typeof define === "function" && define.amd) {
+        define([ "jquery" ], factory);
+    } else {
+        factory(jQuery);
+    }
+}(function($) {
     "use strict";
     $.fn.igrid = function(options) {
         if (!$(this).is("table")) throw Error("Igrid element must be a table!");
@@ -2130,4 +2136,4 @@
         }
     }
 
-})(jQuery);
+});
