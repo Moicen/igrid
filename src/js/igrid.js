@@ -1,5 +1,5 @@
 /*
-* Igrid is a lightweight jQuery plugin for data manipulations. 
+* Igrid is a lightweight jQuery plugin for data manipulations.
 * This project is free for both opensource and commercial use,
 * and you can also change some code for your best usage.
 * While I totally hope you can commit your change to github
@@ -27,7 +27,7 @@
 
     var identity = 0, icons = null, cache = {};
     //default options
-    var _DEFAULT = {
+    var config = {
         cols: [],
         customCol: undefined,
         singleSelect: false,
@@ -40,6 +40,7 @@
         },
         request: {
             cache: false,
+            autoload: true,
             loadonce: true,
             param: {},
             sord: 1,
@@ -53,7 +54,7 @@
         },
         paginator: {
             paging: true,
-            pageSizeList: [10, 20, 50],
+            pageSizeList: [10, 20, 50, 100],
             pageSize: 10,
             pageIndex: 1,
             records: 0,
@@ -61,6 +62,7 @@
         },
         lang: "en",
         handler: {},
+        snapshot: {},
         icons: {
             prefix: "fa",
             sort: "sort",
@@ -99,28 +101,40 @@
             root: root,
             panel: panel,
             igrid: this
-        }, _DEFAULT, options);
-        init(cache[guid]);
+        }, config, options);
         this.guid = guid;
+        this.grid = ele;
+        init(cache[guid]);
     }
 
 
     Igrid.prototype = {
 
         version: "1.0.0",
-        
+
         constructor: Igrid,
-        
+
         //Read igrid's option(s)
         getOption: function(key) {
             return key === undefined ? cache[this.guid] : cache[this.guid][key];
         },
 
+        //Set igrid's option
+        setOption: function (key, parent, value) {
+            var opt = cache[this.guid];
+            //if only 2 arguments, ignore the middle one.
+            if (arguments.length == 2) {
+                value = parent;
+                parent = undefined;
+            }
+            (parent ? opt[parent] : opt)[key] = value;
+            return opt.igrid;
+        },
+
         //load data into igrid.
         load: function(data) {
             var opt = cache[this.guid];
-            if (data && $.isArray(data)) opt.data = dataClean(data, opt.cols);
-            if (opt.paginator.paging) resetPager(configPager(opt));
+            iif (data && $.isArray(obj)) prepare(opt, data);
             reload(opt);
             return opt.igrid;
         },
@@ -133,9 +147,7 @@
 
             if ($.isArray(obj)) {
                 //obj is array data to be reload
-                opt.data = dataClean(obj, opt.cols);
-                if (cache[this.guid].paginator.paging)
-                    resetPager(configPager(opt));
+                prepare(opt, obj);
                 reload(opt);
             } else {
                 if (opt.remote) {
@@ -152,7 +164,8 @@
         //search
         search: function(param) {
             var opt = cache[this.guid];
-            if (!opt.request.cache && opt.remote) return this.reload(param);
+            if (!opt.request.cache && opt.remote) 
+            	return this.reload(param);
             search(opt, param);
             return opt.igrid;
         },
@@ -162,6 +175,22 @@
             var opt = cache[this.guid];
             if (!opt.request.loadonce) return opt.igrid;
             update(opt, factor, values);
+            this.refresh();
+            return opt.igrid;
+        },
+
+        //update data in a specifical cell
+        updateCell: function (ridx, field, value) {
+            var opt = cache[this.guid];
+            saveInput(opt, ridx2Idx(opt, ridx), field, value);
+            return opt.igrid;
+        },
+
+        //update all the data in the igrid
+        updateAll: function (factor, values) {
+            var opt = cache[this.guid];
+            if (!opt.request.loadonce) return opt.igrid;
+            updateAll(opt, factor, values);
             this.refresh();
             return opt.igrid;
         },
@@ -306,7 +335,16 @@
             paging(opts, opts.paginator.pageIndex);
             return opts.igrid;
         },
-
+        getParentRowIdx: function(){
+        	var subTr = cache[this.guid].root.parent().parent();
+        	if (subTr.length == 0 || !subTr.is("tr") || 
+        		!subTr.hasClass("igrid-sub-tr")) {
+            	return null;
+	        }
+	        var tr = subTr.prev("tr");
+	        if (tr.length == 0) return null;
+	        return parseInt(tr.attr("data-ridx"), 10);
+        },
         getSelectedRow: function() {
             var tr = cache[this.guid].grid.find("tr.selected");
             if (tr.length == 0) {
@@ -356,10 +394,10 @@
 
         getMultiSelectedRows: function() {
             var trs = cache[this.guid].grid.find("tr.selected").not(".sum");
-            if (trs.length == 0) {
-                return null;
-            }
+
             var rows = [];
+            if (trs.length == 0) return rows;
+            
             for (var i = 0; i < trs.length; i++) {
                 rows.push(readRow(cache[this.guid], parseInt($(trs[i]).attr("data-ridx"), 10)));
             }
@@ -404,12 +442,15 @@
             return opt.igrid;
         },
 
-        getData: function() {
+        getData: function(all) {
             if (!this.valid()) {
                 warning("you have some wrong data in the grid, please check your input and try again.");
                 return null;
             }
-            return cache[this.guid].data || [];
+            var opt = cache[this.guid];
+            if (!all || (opt.remote && !opt.request.loadonce))
+                return opt.data || [];
+            return opt.Storage || [];
         },
 
         getCurPageData: function() {
@@ -444,29 +485,123 @@
             return opt.igrid;
         },
 
-        saveCell: function(ridx, field) {
-            var opt = cache[this.guid];
+        saveCell: function(ridx, field, save) {
+            if (arguments.length == 2) save = true;
+            var opt = cache[this.guid],
+                col = opt.cols.first(function (r) { return r.field == field; }),
+                value = format("", col, ridx, readRow(opt, ridx));
             var td = opt.grid.find("tr[data-ridx='" + ridx + "'] td[data-field='" + field + "']");
             if (td.length == 0) {
                 throw Error("Can not find the cell of row[{0}] column[{1}] .".format(ridx, field));
             }
-            var input = opt.isWebKit ? td : td.find("[contenteditable]");
-            var value = editSave(input, ridx, field, opt);
-            if (value === false) return false;
+            if (save) {
+                var input = opt.isWebKit ? td : td.find("[contenteditable]");
+                value = editSave(input, ridx, field, col, opt);
+                if (value === false) return false;
+            }
             td.removeClass("editable").html(value).prop("contenteditable", false);
             return opt.igrid;
         },
 
+        editCol: function (field, reset) {
+            var opt = cache[this.guid], idx,
+                col = opt.cols.first(function(r, i) {
+                    idx = i;
+                    return r.field == field;
+                });
+            if (!col) throw Error("Can not find the column[{0}] .".format(field));
+            var tds = opt.grid.find("tr[data-ridx] td[data-field='" + field + "']");
+            tds.each(function () {
+                var td = $(this), ridx = td.parent().data("ridx");
+                if (reset) td.html(format("", col, ridx, readRow(opt, ridx)));
+                 renderEditCell(td, opt.isWebKit);
+            });
+            opt.cols[idx].edit = { enable: true };
+            initEditEvent(opt);
+            return opt.igrid;
+        },
+
+        saveCol: function (field, save) {
+            if (arguments.length == 1) save = true;
+            var opt = cache[this.guid], idx,
+                col = opt.cols.first(function(r, i) {
+                    idx = i;
+                    return r.field == field;
+                });
+            if (!col) throw Error("Can not find the column[{0}] .".format(field));
+            var tds = opt.grid.find("tr[data-ridx] td[data-field='" + field + "']");
+            var flag = true;
+            tds.each(function () {
+                var td = $(this), ridx = td.parent().data("ridx"),
+                    value = format("", col, ridx, readRow(opt, ridx));
+                if (save) {
+                    var input = opt.isWebKit ? td : td.find("[contenteditable]");
+                    value = editSave(input, ridx, field, col, opt);
+                    if (value === false) return flag = false;
+                }
+                td.removeClass("editable").html(value).prop("contenteditable", false);
+            });
+            if (flag) {
+                opt.cols[idx].edit = { enable: false };
+            }
+            return flag ? opt.igrid : false;
+        },
+        resetCol: function (field) {
+            var opt = cache[this.guid], idx,
+                col = opt.cols.first(function(r, i) {
+                    idx = i;
+                    return r.field == field;
+                });
+            if (!col) throw Error("Can not find the column[{0}] .".format(field));
+            var tds = opt.grid.find("tr[data-ridx] td[data-field='" + field + "']");
+            tds.each(function () {
+                var td = $(this), ridx = td.parent().data("ridx"),
+                    value = format("", col, ridx, readRow(opt, ridx));
+                td.html(value);
+            });
+            return opt.igrid;
+        },
+
         saveRow: function(ridx) {
-            var opt = cache[this.guid];
+            var opt = cache[this.guid],
+                col = options.cols.first(function(r) { return r.field == field; });
             var tr = opt.grid.find("tr[data-ridx='" + ridx + "']");
             if (tr.length == 0) throw Error("Can not find the row[{0}] .".format(ridx));
-            tr.find("td.editable").each(function() {
+            tr.find("td.editable").each(function () {
                 var input = opt.isWebKit ? $(this) : $(this).find("[contenteditable]");
-                var value = editSave(input, ridx, field, opt);
+                var value = editSave(input, ridx, field, col, opt);
                 if (value === false) return false;
                 $(this).removeClass("editable").html(value).prop("contenteditable", false);
             });
+            return opt.igrid;
+        },
+
+        hightlight: function (ridx, field, color, flag) {
+            var opt = cache[this.guid];
+            if (arguments.length == 2) {
+                if (typeof field == "boolean") {
+                    flag = field;
+                    field = undefined;
+                }
+                else if (!fieldVerify(opt.cols, field)) {
+                    color = field;
+                    field = undefined;
+                }
+            }
+            if (arguments.length == 3) {
+                if (typeof color == "boolean") {
+                    flag = color;
+                    color = undefined;
+                }
+            }
+            color = color || "#EC2C2C";
+            if (flag === undefined) flag = true;
+            var tr = opt.grid.find("tr[data-ridx='" + ridx + "']");
+            if (tr.length == 0) throw Error("Can not find the row[{0}] .".format(ridx));
+
+            if (!field) tr.css("background-color", flag ? color: "");
+            else tr.find("td[data-field='" + field + "']").css("color", flag ? color :"");
+
             return opt.igrid;
         },
 
@@ -479,8 +614,7 @@
 
         destroy: function() {
             var opt = cache[this.guid];
-            opt.grid.off("click", "tbody td").off("dblclick", "tbody td").off("blur", "tbody td")
-                .empty().data("guid", undefined).insertBefore(opt.root);
+            opt.grid.off().empty().data("guid", null).insertBefore(opt.root);
             opt.root.remove();
             $("#igrid-" + this.guid + "-waiting").remove();
             cache[this.guid] = null;
@@ -495,7 +629,8 @@
                 row: rn,
                 param: opts.request.param
             };
-            sessionStorage.setItem("igridStatus", JSON.stringify(status));
+            var key = "igrid" + opts.grid.selector + this.guid;
+            sessionStorage.setItem(key, JSON.stringify(status));
         },
 
         valid: function() {
@@ -504,10 +639,11 @@
     }
 
     //read data from sessionStorage to restore previous status of igrid.
-    function readSession() {
-        var status = sessionStorage.igridStatus;
+    function readSession(key) {
+        var status = sessionStorage.getItem(key);
         if (status) status = JSON.parse(status);
-        return status;
+        sessionStorage.removeItem(key);
+        return status || {};
     }
     //to get full url if you use a simple action name as the url param
     //mostly when you use a MVC framework, you can write just the action name
@@ -523,9 +659,11 @@
         return path || url;
     }
         //check if the given field is valid.
-    function fieldVerify(fields, field) {
-        for (var i = 0; i < fields.length; i++) {
-            if (fields[i].field == field) {
+    function fieldVerify(cols, field) {
+    	if(!field) return false;
+        for (var i = 0; i < cols.length; i++) {
+        	var col = cols[i];
+            if (col.field == field && !col.nondata) {
                 return true;
             }
         }
@@ -569,19 +707,33 @@
         if (options.singleSelect && options.multiSelect)
             throw Error("singleSelect and multiSelect can not be true at the same time!");
         if (isNaN(parseInt(options.request.sord, 10))) options.request.sord = 1;
+        if (!options.request.loadonce) options.paginator.paging = true;
         if (!options.request.sidx || !fieldVerify(options.cols, options.request.sidx))
             options.request.sidx = options.cols[0].field;
         if (isNaN(parseInt(options.paginator.pageIndex)) || options.paginator.pageIndex <= 0)
             options.paginator.pageIndex = 1;
 
-        var status = readSession();
-        if (status && status.url == renderUrl(options.request.url)) {
-            options.paginator.pageIndex = status.page;
-            options.paginator.selectedRow = status.row;
-            options.request.param = status.param;
-            sessionStorage.removeItem("igridStatus");
-        }
+        var key = "igrid" + options.grid.selector + options.guid;
+        options.snapshot = readSession(key);
+        initColsIndex(options.cols);
         return options;
+    }
+
+    function initColsIndex(cols) {
+        var indices = [];
+        for (var i = 0; i < cols.length; i++) {
+            var col = cols[i];
+            if (col.hide && !col.index) {
+                col.index = 0;
+                continue;
+            }
+            col.index = col.index || (i + 1);
+            while (indices.contains(col.index)) {
+                col.index++;
+            }
+            indices.push(col.index);
+        }
+        return cols;
     }
 
     function initEvent(options) {
@@ -593,6 +745,8 @@
     function initTableEvent(options) {
         //normal click event on the table cells.
         options.grid.on("click", "tbody td", function() {
+        	//skip the editable cell
+        	if ($(this).hasClass("editable")) return;
             //skip the subgrid row
             if ($(this).parent().hasClass("igrid-sub-tr")) return;
             var tr = $(this).parent(),
@@ -634,8 +788,10 @@
                 row = options.igrid.getRowData(ridx);
             if (!tr.hasClass("selected")) {
                 tr.parent().find("tr.selected").removeClass("selected");
-                tr.addClass("selected");
-                selectRow(options, true, row, ridx);
+                options.grid.find(".igrid-radio input:radio").prop("checked", false);
+				tr.addClass("selected");
+                tr.find(".igrid-radio input:radio").prop("checked", true);
+				selectRow(options, true, row, ridx);
             } else {
                 selectRow(options, false, row, ridx);
             }
@@ -783,26 +939,32 @@
         var spans = subGridPrepare(options.cols.count(function(c) {
             return !c.hide;
         }), options.subGrid.options);
-        var children = [];
+        var children = [], keys = options.subGrid.keys, subGrids = {};
+        var ridx = parseInt(tr.attr("data-ridx"), 10),
+            row = options.igrid.getRowData(ridx);
         options.subGrid.options.forEach(function(opt, idx) {
+        	var current = $.extend(true, {}, opt);
             var subGrid = $("<table></table>").addClass(options.grid.attr("class"));
-            var ridx = parseInt(tr.attr("data-ridx"), 10);
-            var row = options.igrid.getRowData(ridx);
-            if (typeof opt.data == "function") opt.data = opt.data.call(null, row);
-            if (typeof opt.paramFn == "function") {
-                opt.request.param = opt.paramFn.call(null, row, ridx);
+            
+            if (typeof current.data == "function") current.data = current.data.call(null, row);
+            if (typeof current.paramFn == "function") {
+                current.request.param = current.paramFn.call(null, row, ridx);
             }
+
             var td = $("<td colspan='{0}' data-idx='{1}'></td>".format(spans[idx], idx));
             trSub.append(td.append(subGrid));
             children.push({
                 grid: subGrid,
-                opt: opt
+                opt: current
             });
         });
         tr.after(trSub);
         children.forEach(function(child) {
-            child.grid.igrid(child.opt);
+            var grid = child.grid.igrid(child.opt);
+            if (keys) subGrids[keys[idx]] = grid;
         });
+        if (typeof options.subGrid.handler == "function")
+            options.subGrid.handler.call(tr, subGrids, row);
     }
 
     //show a pannel to let user choose which cols to be shown.
@@ -851,8 +1013,8 @@
                 $(this).attr("colspan", spans[$(this).data("idx")]);
             });
         }
-        grid.find("tr.subtotal").html(renderSumCell(options, "subtotal", "小计"));
-        grid.find("tr.sum").html(renderSumCell(options, "data", "总计"));
+        grid.find("tr.subtotal").html(renderSumCell(options, "subtotal", locale("subtotal", options.lang)));
+        grid.find("tr.sum").html(renderSumCell(options, "data", locale("sum", options.lang))));
     }
 
 
@@ -866,8 +1028,8 @@
                 return c.field == field;
             });
             if (col.edit && col.edit.enable) {
-                var value = editSave($(this), ridx, field, options);
-                $(this).html(format(value, col, ridx, options.igrid.getRowData(ridx)));
+                var value = editSave($(this), ridx, field, col, options);
+                if(value !== false) $(this).html(value);
             }
         });
         options.grid.on("keydown", "[contenteditable='true']", function(e) {
@@ -891,35 +1053,32 @@
         });
     }
 
-    function editSave(input, ridx, field, options) {
-        //chrome will add a <span> element to format the content 
+    function editSave(input, ridx, field, col, options) {
+        //chrome will add a <span> element to format the content
         //after we paste some text in a contenteditable element,
         //here we need to remove this span and keep it's text content only.
-        if (input.children().length > 0) input.html(input.children()[0].innerHTML);
-        var col = options.cols.first(function(r) {
-            return r.field == field;
-        });
+        input.html(input.html().replace(/<\s*(\S+)(\s[^>]*)?>[\s\S]*<\s*\/\1\s*>|<\s*(\S+)(\s[^>]*)?\/?>/g, ""));
         var value = editVerify(col, field, input.html());
         input.html(value || input.html());
         //custom verify
         if (typeof options.handler.beforeCellSave == "function") {
-            value = options.handler.beforeCellSave.call(null, value, field, ridx);
+            value = options.handler.beforeCellSave.call(options.igrid, value, field, ridx);
         }
         if (value === false) {
             error(input);
             return false;
         }
+        correct(input);
         saveInput(options, ridx2Idx(options, ridx), field, value);
 
         if (typeof options.handler.afterCellSave == "function") {
-            options.handler.afterCellSave.call(null, value, field, ridx);
+            options.handler.afterCellSave.call(options.igrid, value, field, ridx);
         }
-        correct(input);
         return format(value, col, ridx, readRow(options, ridx));
     }
 
     function editVerify(col, field, input) {
-        if (!col.edit) return input;
+        if (!col.edit || input == "") return input;
         var value = input;
         if (col.edit.type == "integer") {
             value = Helper.toInt(value, true);
@@ -937,11 +1096,11 @@
         }
         var rules = col.edit.rules;
         if (rules) {
-            if (rules.hasOwnProperty("min") && value < rules.min) {
+            if (rules.min && value < rules.min) {
                 warning("{0}c annot be less then {1}".format(col.label, rules.min));
                 return false;
             }
-            if (rules.hasOwnProperty("max") && value > rules.max) {
+            if (rules.max && value > rules.max) {
                 warning("{0} cannot be greeter then {1}".format(col.label, rules.max));
                 return false;
             }
@@ -971,6 +1130,7 @@
     }
 
     function renderData(options) {
+        if (!options.request.autoload) return;
         if (options.remote && (!options.data || options.data.length == 0)) {
             request(options);
         } else {
@@ -1026,7 +1186,7 @@
                 cls += " sortable ";
                 data += "data-sortfield='" + (col.sortfield || col.field) + "'";
                 var sort = options.request.sidx == col.field ?
-                    (options.request.sord > 0 ? icons.sortAsc : icons.sortDesc) : icons.sort; 
+                    (options.request.sord > 0 ? icons.sortAsc : icons.sortDesc) : icons.sort;
                 children += "<i class='{0} {1}'></i>".format(icons.prefix, sort);
             }
             html += th.format(col.field, cls, style, data, children);
@@ -1054,7 +1214,7 @@
             }
         }
         if (options.summation.enable) {
-            subtotal(options, list);
+            sum(options, list);
             tbody.append(renderSubtotalRow(options) + renderSumRow(options));
         }
         return tbody;
@@ -1069,7 +1229,10 @@
         if (options.subGrid.enable) tr.append("<td class='igrid-sub-icon'><i class='{0} {1}'></i></td>".format(icons.prefix, icons.plus));
 
         for (var i = 0; i < options.cols.length; i++) {
-            tr.append(renderCell(options.cols[i], ridx, rowData, options.isWebKit));
+            var col = options.cols[i];
+            var td = renderCell(col, ridx, rowData, options.isWebKit);
+            if (col.highlight) highlight(tr, td, rowData[col.field], col.highlight, ridx, rowData);
+            tr.append(td);
         }
 
         if (options.customCol) tr.append(renderCustomCell(options.customCol, ridx, rowData));
@@ -1083,11 +1246,11 @@
 
     //when you need to show summation data.
     function renderSubtotalRow(options) {
-        return "<tr class='subtotal'>{0}</tr>".format(renderSumCell(options, "subtotal", "小计"));
+        return "<tr class='subtotal'>{0}</tr>".format(renderSumCell(options, "subtotal", locale("subtotal", options.lang)));
     }
 
     function renderSumRow(options) {
-        return "<tr class='sum'>{0}</tr>".format(renderSumCell(options, "data", "总计"));
+        return "<tr class='sum'>{0}</tr>".format(renderSumCell(options, "data", locale("sum", options.lang)));
     }
 
     function renderSumCell(options, name, title) {
@@ -1100,6 +1263,7 @@
         if (options.singleSelect) span++;
         if (options.multiSelect) span++;
         if (options.subGrid.enable) span++;
+        var data = options.summation[name];
         for (var i = 0; i < len; i++) {
             var col = options.cols[i];
             if (col.hide) continue;
@@ -1109,8 +1273,13 @@
                     first = "<td colspan='{0}'>{1}：</td>".format(span - 1, title);
                     html += first;
                 }
-                var val = options.summation[name][col.field];
-                if (col.format == "separate") val = val.toSeparate();
+                var val = data[col.field];
+                if (val === undefined && options.summation.calculator) {
+                    var calculator = options.summation.calculator[col.field];
+                    if (typeof calculator == "function")
+                        val = calculator.call(null, data);
+                }                
+                if (col.format == "separate") (val || 0) = val.toSeparate();
                 else if (col.format == "money") val = Igrid.ToDecimalString(val).toSeparate();
                 html += "<td class='{0}'>{1}</td>".format(col.align, val);
             } else {
@@ -1118,6 +1287,7 @@
                     html += "<td></td>";
             }
         }
+        if (options.customCol) html += "<td></td>";
         return html;
     }
 
@@ -1125,7 +1295,6 @@
         var td = $("<td>").attr("data-field", col.field),
             value = rowData[col.field];
         var content = format(value, col, ridx, rowData);
-        if (col.highlight) highlight(td, value, col.highlight, ridx, rowData);
         decorateCell(td, content, col, isWebKit);
         return td;
     }
@@ -1175,7 +1344,7 @@
                 if (typeof col.formatter == "function") {
                     return col.formatter.call(null, value, rowData, ridx);
                 }
-                return value.toSeparate();
+                return (value || 0).toSeparate();
             case "money":
                 if (typeof col.formatter == "function") {
                     return col.formatter.call(null, value, rowData, ridx);
@@ -1229,49 +1398,34 @@
         }
     }
 
-    function highlight(td, value, hl, ridx, rowData) {
-        var color = "red";
+    function highlight(tr, td, value, hl, ridx, rowData) {
+        var color = "#EC2C2C", target = "cell";
         if (hl && typeof hl == "object") {
             if (hl.factor && typeof hl.factor != "function") throw Error("factor of highlight must be a function!");
             if (typeof hl.factor == "function" && !hl.factor.call(null, value, rowData, ridx)) return;
             color = hl.color || color;
             if (typeof color == "function") color = color.call(null, value, rowData, ridx);
+            target = hl.target || target;
         }
-        td.css("color", color);
+        if (target == "cell") td.css("color", color);
+        else tr.css("background-color", color);
     }
 
     function getRowNum(options, ridx) {
         return options.request.loadonce ? ridx : options.paginator.pageSize * (options.paginator.pageIndex - 1) + ridx;
     }
 
-    function sum(opt, data) {
-        if (!opt.request.loadonce && data.summation) {
-            opt.summation.data = data.summation;
-            return;
-        }
-        if (opt.request.loadonce) {
-            var summation = {};
-            opt.cols.forEach(function(col) {
-                if (col.sum) {
-                    summation[col.field] = opt.data.sum(function(row) {
-                        return Helper.toFloat(row[col.field]);
-                    });
-                }
-            });
-            opt.summation.data = summation;
-        }
-    }
-
-    function subtotal(opt, list) {
-        var result = {};
-        opt.cols.forEach(function(col) {
+    function sum(opt, list) {
+        var summation = {}, data = list || opt.data;
+        opt.cols.forEach(function (col) {
             if (col.sum) {
-                result[col.field] = list.sum(function(row) {
-                    return Helper.toFloat(row[col.field]);
+                summation[col.field] = data.sum(function (row) { 
+                	return Helper.toFloat(row[col.field]); 
                 });
             }
         });
-        opt.summation.subtotal = result;
+        if (list) opt.summation.subtotal = summation;
+        else opt.summation.data = summation;
     }
 
 
@@ -1392,7 +1546,7 @@
         //render page info
     function renderInfo(pg, lang) {
             return "<span class='static-control'>{0},{1}</span>"
-                .format(locale("total", lang).format("<strong>" + pg.pageCount + "</strong>", "<strong>" + pg.records + "</strong>"), 
+                .format(locale("total", lang).format("<strong>" + pg.pageCount + "</strong>", "<strong>" + pg.records + "</strong>"),
                     locale("current", lang).format("<strong>" + pg.pageIndex + "</strong>"));
         }
         //render page link
@@ -1414,19 +1568,27 @@
         return jump;
     }
 
-    function request(options) {
-        mask(options);
-        var param = $.extend(options.request.param, {
+    function renderParam(options) {
+        var base = {}, paginator = options.paginator, snapshot = options.snapshot;
+        paginator.pageIndex = snapshot.page || paginator.pageIndex;
+        paginator.selectedRow = snapshot.row;
+        if (paginator.paging && !options.request.loadonce) {
+            base.pageIndex = paginator.pageIndex;
+            base.pageSize = paginator.pageSize;
+        }
+        options.request.param = snapshot.param || options.request.param;
+        options.snapshot = {};
+        return $.extend(base, options.request.param, {
             sord: options.request.sord,
             sidx: options.request.sidx || options.cols[0].field
         });
-        if (options.paginator.paging && !options.request.loadonce) {
-            param.pageIndex = options.paginator.pageIndex;
-            param.pageSize = options.paginator.pageSize;
-        }
+    }
+    function request(options) {
+        if (!options.request.url) return;
+        mask(options);
         $.ajax({
             url: options.request.url,
-            data: param,
+            data: renderParam(options),
             type: options.request.mtype,
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             dataType: "json"
@@ -1440,7 +1602,7 @@
             reload(options);
         }).fail(function(result) {
             var err = result.responseJSON;
-            warning(err ? err.Message : "请求失败！");
+            warning(err ? err.Message : "Request Failed！");
         }).always(function() {
             unmask(options);
         });
@@ -1473,18 +1635,39 @@
         } else {
             options.data = data;
         }
-        if (options.summation.enable) sum(options, data);
+        if (options.summation.enable && !options.request.loadonce && data.summation)
+            options.summation.data = data.summation;
         if (options.request.cache || !options.remote) options.Storage = data;
         if (typeof options.handler.onAsyncComplete == "function") {
-            options.handler.onAsyncComplete.call(null, data);
+            options.handler.onAsyncComplete.call(options.igrid, data);
         }
     }
-    function loadComplete(options){
+    function reload(options) {
+        if (options.summation.enable && options.request.loadonce) sum(options);
+        options.grid.find("thead .igrid-check input:checkbox, thead .igrid-radio input:radio").prop("checked", false);
+        options.grid.find("tbody").remove();
+        options.grid.find("thead").after(renderTbody(options));
+        options.grid.find("img").on("error", function () {
+            $(this).parent().addClass("error");
+            $(this).remove();
+        });
+        //callback
+        loadCallBack(options);
+        //bind click handle to links, to save current status
+        options.grid.find("a[href]").click(function () {
+            //if opened in another window or tab, no need to save status
+            if (this.target && this.target != "_self") return;
+            //if not going to another url, no need to save status
+            if (!this.href || !/(((\/\w+)+(\/\w+))|(\w+))(\?(\w+=\w+)(\&\w+=\w+)*)*$/.test(this.href)) return;
+            options.igrid.storeStatus($(this).data("ridx"));
+        });
+    }
+    function loadCallBack(options) {
         if (typeof options.handler.onLoadComplete == "function") {
             var start, end, pg = options.paginator;
             if (options.request.loadonce) {
-                start = pg.pageSize * (pg.pageIndex - 1) + 1;
-                end = Math.min(pg.records, pg.pageSize * pg.pageIndex);
+                start = pg.paging ? pg.pageSize * (pg.pageIndex - 1) + 1 : 1;
+                end = pg.paging ? Math.min(pg.records, pg.pageSize * pg.pageIndex) : options.data.length;
             } else {
                 start = 1;
                 var pageEnd = pg.pageIndex * pg.pageSize;
@@ -1494,17 +1677,12 @@
                     end = pg.pageSize;
                 }
             }
-            options.handler.onLoadComplete.call(null, options.data.slice(0), start, end);
+            options.handler.onLoadComplete.call(options.igrid, options.data.slice(0), start, end);
         }
-    }
-    function reload(options) {
-        options.grid.find("thead .igrid-check input:checkbox, thead .igrid-radio input:radio").prop("checked", false);
-        options.grid.find("tbody").remove();
-        options.grid.find("thead").after(renderTbody(options));
-        loadComplete(options);
     }
         //local search
     function search(options, param) {
+        options.request.param = param;
         var data = options.Storage.where(function(item) {
             return compare(item, param, options.cols);
         });
@@ -1559,13 +1737,25 @@
             opt.handler.onUpdate.call(null, opt.Storage || opt.data);
         }
     }
-
+    function updateAll(opt, factor, values) {
+        updateData(opt.Storage, factor, values);
+        if (typeof opt.handler.onUpdate == "function") {
+            opt.handler.onUpdate.call(null, opt.Storage);
+        }
+    }
     function updateData(data, factor, values) {
+        if (!values && typeof factor == "object") {
+            values = factor;
+            factor = null;
+        }
         data.forEach(function(item) {
-            if (factor.call(null, item)) {
+            if (!factor || factor.call(null, item)) {
                 for (var prop in values) {
-                    if (item.hasOwnProperty(prop))
-                        item[prop] = values[prop];
+                    if (item.hasOwnProperty(prop)) {
+                        var val = values[prop];
+                        if (typeof val == "function") val = val.call(null, item);
+                        item[prop] = val;
+                    }
                 }
             }
         });
@@ -1594,13 +1784,13 @@
 
     function setRow(options, ridx, row) {
         var idx = ridx2Idx(options, ridx);
-        options.data[idx] = rowClean(row, options.cols);
+        options.data[idx] = genRow(row, options.cols);
     }
 
-    function setCell(options, ridx, col, data) {
+    function setCell(options, ridx, field, data) {
         var idx = ridx2Idx(options, ridx);
-        if (fieldVerify(options.cols, col)) {
-            options.data[idx][col] = data;
+        if (fieldVerify(options.cols, field)) {
+            options.data[idx][field] = data;
         }
     }
 
@@ -1615,7 +1805,7 @@
         if (!options.data) {
             options.data = [];
         }
-        options.data.splice(idx, 0, rowClean(row, options.cols));
+        options.data.splice(idx, 0, genRow(row, options.cols));
         configPager(options);
     }
 
@@ -1633,7 +1823,7 @@
             options.data = rows;
         } else {
             rows.forEach(function(row, i) {
-                options.data.splice(idx + i, 0, rowClean(row, options.cols));
+                options.data.splice(idx + i, 0, genRow(row, options.cols));
             });
         }
         configPager(options);
@@ -1658,9 +1848,12 @@
     }
 
     function dataSort(data, sord, sidx) {
+        if (typeof sord == "string") sord = sord == "ASC" ? 1 : -1;
         return data.sort(function(x, y) {
-            if (typeof sord == "string") sord = sord == "ASC" ? 1 : -1;
-            return sord * (x[sidx] > y[sidx] ? 1 : -1);
+            var a = x[sidx], b = y[sidx];
+            if (typeof a == "number" && typeof b == "number")
+                return sord * (a - b);
+            return sord * (a || "").toString().toLowerCase().localeCompare((b || "").toString().toLowerCase());
         });
     }
 
@@ -1691,13 +1884,14 @@
         return data;
     }
 
-    function rowClean(row, cols) {
+    function genRow(row, cols) {
+        var data = {};
         for (var p in row) {
-            if (!fieldVerify(cols, p) && !$.isArray(row[p])) {
-                delete row[p];
+            if (fieldVerify(cols, p)) {
+                data[p] = row[p];
             }
         }
-        return row;
+        return data;
     }
 
     function warning(msg) {
@@ -1732,7 +1926,7 @@
     function ctrlEscape(str) {
         return str.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\v/g, "\\v").replace(/\f/g, "\\f");
     }
-    
+
 
     var Helper = {
         //Convert to integer
