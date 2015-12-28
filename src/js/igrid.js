@@ -134,7 +134,7 @@
         //load data into igrid.
         load: function(data) {
             var opt = cache[this.guid];
-            iif (data && $.isArray(obj)) prepare(opt, data);
+            if (data && $.isArray(obj)) prepare(opt, data);
             reload(opt);
             return opt.igrid;
         },
@@ -1014,7 +1014,7 @@
             });
         }
         grid.find("tr.subtotal").html(renderSumCell(options, "subtotal", locale("subtotal", options.lang)));
-        grid.find("tr.sum").html(renderSumCell(options, "data", locale("sum", options.lang))));
+        grid.find("tr.sum").html(renderSumCell(options, "data", locale("sum", options.lang)));
     }
 
 
@@ -1279,7 +1279,7 @@
                     if (typeof calculator == "function")
                         val = calculator.call(null, data);
                 }                
-                if (col.format == "separate") (val || 0) = val.toSeparate();
+                if (col.format == "separate") val = (val || 0).toSeparate();
                 else if (col.format == "money") val = Igrid.ToDecimalString(val).toSeparate();
                 html += "<td class='{0}'>{1}</td>".format(col.align, val);
             } else {
@@ -2331,4 +2331,4 @@
         }
     }
 
-});
+}));
